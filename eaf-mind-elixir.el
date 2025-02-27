@@ -1,7 +1,7 @@
 ;;; eaf-mind-elixir.el --- Mind map application base on Mind Elixir
 
 ;; Filename: eaf-mind-elixir.el
-;; Description: Vue demo
+;; Description: Mind Elixir
 ;; Author: Andy Stewart <lazycat.manatee@gmail.com>
 ;; Maintainer: Andy Stewart <lazycat.manatee@gmail.com>
 ;; Copyright (C) 2021, Andy Stewart, all rights reserved.
@@ -39,7 +39,7 @@
 
 ;;; Commentary:
 ;;
-;; Vue demo
+;; Mind Elixir
 ;;
 
 ;;; Installation:
@@ -92,7 +92,7 @@
 
 (defcustom eaf-mind-elixir-keybinding
   '(("<f12>" . "open_devtools"))
-  "The keybinding of EAF Vue demo."
+  "The keybinding of EAF Mind Elixir."
   :type 'cons)
 
 (add-to-list 'eaf-app-binding-alist '("mind-exlixir" . eaf-mind-elixir-keybinding))

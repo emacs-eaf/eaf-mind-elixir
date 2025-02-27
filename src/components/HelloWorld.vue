@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <ul>
-      <li>Copy vue-demo to directory emacs-applications-framework/app/</li>
+      <li>Copy mind-elixir to directory emacs-applications-framework/app/</li>
       <li>Write vue.js code and use command <div class="command">npm run serve</div> for test</li>
       <li>Send PR, EAF will run command <div class="command">npm run build</div> before run app</li>
     </ul>

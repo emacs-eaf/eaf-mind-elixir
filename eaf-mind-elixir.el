@@ -85,7 +85,7 @@
 ;;; Code:
 
 ;;;###autoload
-(defun eaf-open-vue-demo ()
+(defun eaf-open-mind-elixir ()
   "Open EAF vue demo"
   (interactive)
   (eaf-open "eaf-mind-elixir" "mind-exlixir"))

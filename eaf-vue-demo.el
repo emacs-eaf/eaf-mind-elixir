@@ -1,6 +1,6 @@
-;;; eaf-vue-demo.el --- Vue demo
+;;; eaf-mind-elixir.el --- Mind map application base on Mind Elixir
 
-;; Filename: eaf-vue-demo.el
+;; Filename: eaf-mind-elixir.el
 ;; Description: Vue demo
 ;; Author: Andy Stewart <lazycat.manatee@gmail.com>
 ;; Maintainer: Andy Stewart <lazycat.manatee@gmail.com>
@@ -9,7 +9,7 @@
 ;; Version: 0.1
 ;; Last-Updated: 2021-08-01 10:30:42
 ;;           By: Andy Stewart
-;; URL: http://www.emacswiki.org/emacs/download/eaf-vue-demo.el
+;; URL: http://www.emacswiki.org/emacs/download/eaf-mind-elixir.el
 ;; Keywords:
 ;; Compatibility: GNU Emacs 28.0.50
 ;;
@@ -44,14 +44,14 @@
 
 ;;; Installation:
 ;;
-;; Put eaf-vue-demo.el to your load-path.
+;; Put eaf-mind-elixir.el to your load-path.
 ;; The load-path is usually ~/elisp/.
 ;; It's set in your ~/.emacs like this:
 ;; (add-to-list 'load-path (expand-file-name "~/elisp"))
 ;;
 ;; And the following to your ~/.emacs startup file.
 ;;
-;; (require 'eaf-vue-demo)
+;; (require 'eaf-mind-elixir)
 ;;
 ;; No need more.
 
@@ -60,7 +60,7 @@
 ;;
 ;;
 ;; All of the above can customize by:
-;;      M-x customize-group RET eaf-vue-demo RET
+;;      M-x customize-group RET eaf-mind-elixir RET
 ;;
 
 ;;; Change log:
@@ -88,18 +88,18 @@
 (defun eaf-open-vue-demo ()
   "Open EAF vue demo"
   (interactive)
-  (eaf-open "eaf-vue-demo" "vue-demo"))
+  (eaf-open "eaf-mind-elixir" "mind-exlixir"))
 
-(defcustom eaf-vue-demo-keybinding
+(defcustom eaf-mind-elixir-keybinding
   '(("<f12>" . "open_devtools"))
   "The keybinding of EAF Vue demo."
   :type 'cons)
 
-(add-to-list 'eaf-app-binding-alist '("vue-demo" . eaf-vue-demo-keybinding))
+(add-to-list 'eaf-app-binding-alist '("mind-exlixir" . eaf-mind-elixir-keybinding))
 
-(setq eaf-vue-demo-module-path (concat (file-name-directory load-file-name) "buffer.py"))
-(add-to-list 'eaf-app-module-path-alist '("vue-demo" . eaf-vue-demo-module-path))
+(setq eaf-mind-elixir-module-path (concat (file-name-directory load-file-name) "buffer.py"))
+(add-to-list 'eaf-app-module-path-alist '("mind-exlixir" . eaf-mind-elixir-module-path))
 
-(provide 'eaf-vue-demo)
+(provide 'eaf-mind-elixir)
 
-;;; eaf-vue-demo.el ends here
+;;; eaf-mind-elixir.el ends here

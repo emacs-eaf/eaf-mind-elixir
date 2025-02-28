@@ -106,6 +106,10 @@ If called interactively, prompt for a .eme file to open or create."
     ("C-0"   . "js_zoom_reset")
     ("C-x C-y" . "paste_to_node_topic")
     ("C-x C-w" . "copy_node_topic")
+    ("C-f"     . "eaf-send-right-key")
+    ("C-b"     . "eaf-send-left-key")
+    ("C-n"     . "eaf-send-down-key")
+    ("C-p"     . "eaf-send-up-key")
     )
   "The keybinding of EAF Mind Elixir."
   :type 'cons)

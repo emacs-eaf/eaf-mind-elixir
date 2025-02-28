@@ -11,7 +11,19 @@
    data() {
      return {
        backgroundColor: '#ffffff',
-       foregroundColor: '#000000',
+       textColor: '#000000',
+       colorPalette: {
+         main: '#000000',
+         second: '#000000',
+         third: '#000000',
+         fourth: '#000000',
+         fifth: '#000000',
+         sixth: '#000000',
+         seventh: '#000000',
+         eighth: '#000000',
+         ninth: '#000000',
+         tenth: '#000000'
+       },
        mindElixir: null,
        selectedNode: null
      }
@@ -28,18 +40,20 @@
          this.mindElixir.editTopic(selectedNode)
        }
      },
-     initColors(backgroundColor, foregroundColor) {
+     initColors(backgroundColor, textColor, colorPalette) {
        this.backgroundColor = backgroundColor;
-       this.foregroundColor = foregroundColor;
+       this.textColor = textColor;
+       this.colorPalette = colorPalette;
        
        // 如果已经有实例，更新它的主题
        if (this.mindElixir) {
          this.updateMindElixirTheme();
        }
      },
-     updateTheme(backgroundColor, foregroundColor) {
+     updateTheme(backgroundColor, textColor, colorPalette) {
        this.backgroundColor = backgroundColor;
-       this.foregroundColor = foregroundColor;
+       this.textColor = textColor;
+       this.colorPalette = colorPalette;
        
        if (this.mindElixir) {
          this.updateMindElixirTheme();
@@ -49,17 +63,35 @@
        if (this.mindElixir) {
          this.mindElixir.changeTheme({
            name: 'EmacsTheme',
-           palette: [this.foregroundColor],
+           palette: [
+             this.colorPalette.main,
+             this.colorPalette.second,
+             this.colorPalette.third,
+             this.colorPalette.fourth,
+             this.colorPalette.fifth,
+             this.colorPalette.sixth,
+             this.colorPalette.seventh,
+             this.colorPalette.eighth,
+             this.colorPalette.ninth,
+             this.colorPalette.tenth
+           ],
            cssVar: {
-             "--main-color": this.foregroundColor,
+             "--main-color": this.colorPalette.main,
              "--main-bgcolor": this.backgroundColor,
-             "--color": this.foregroundColor,
+             "--color": this.textColor,
              "--bgcolor": this.backgroundColor,
-             "--panel-color": this.foregroundColor,
+             "--panel-color": this.colorPalette.second,
              "--panel-bgcolor": this.backgroundColor,
-             "--panel-border-color": this.foregroundColor
+             "--panel-border-color": this.colorPalette.third,
+             "--root-color": this.colorPalette.fourth,
+             "--root-bgcolor": this.colorPalette.fifth,
+             "--primary-color": this.colorPalette.sixth,
+             "--selection-color": this.colorPalette.seventh,
+             "--line-color": this.colorPalette.eighth,
+             "--hover-color": this.colorPalette.ninth,
+             "--warning-color": this.colorPalette.tenth
            }
-         }, true);  // 第二个参数true表示立即刷新
+         }, true);
        }
      },
      createMindElixir() {
@@ -67,15 +99,33 @@
          el: '#map',
          theme: {
            name: 'EmacsTheme',
-           palette: [this.foregroundColor],
+           palette: [
+             this.colorPalette?.main || this.textColor,
+             this.colorPalette?.second || this.textColor,
+             this.colorPalette?.third || this.textColor,
+             this.colorPalette?.fourth || this.textColor,
+             this.colorPalette?.fifth || this.textColor,
+             this.colorPalette?.sixth || this.textColor,
+             this.colorPalette?.seventh || this.textColor,
+             this.colorPalette?.eighth || this.textColor,
+             this.colorPalette?.ninth || this.textColor,
+             this.colorPalette?.tenth || this.textColor
+           ],
            cssVar: {
-             "--main-color": this.foregroundColor,
+             "--main-color": this.colorPalette?.main || this.textColor,
              "--main-bgcolor": this.backgroundColor,
-             "--color": this.foregroundColor,
+             "--color": this.textColor,
              "--bgcolor": this.backgroundColor,
-             "--panel-color": this.foregroundColor,
+             "--panel-color": this.colorPalette?.second || this.textColor,
              "--panel-bgcolor": this.backgroundColor,
-             "--panel-border-color": this.foregroundColor
+             "--panel-border-color": this.colorPalette?.third || this.textColor,
+             "--root-color": this.colorPalette?.fourth || this.textColor,
+             "--root-bgcolor": this.colorPalette?.fifth || this.backgroundColor,
+             "--primary-color": this.colorPalette?.sixth || this.textColor,
+             "--selection-color": this.colorPalette?.seventh || this.textColor,
+             "--line-color": this.colorPalette?.eighth || this.textColor,
+             "--hover-color": this.colorPalette?.ninth || this.textColor,
+             "--warning-color": this.colorPalette?.tenth || this.textColor
            }
          }
        }

@@ -61,6 +61,9 @@
      },
      updateMindElixirTheme() {
        if (this.mindElixir) {
+         // 生成根节点背景色
+         const rootBgColor = this.generateRootBgColor(this.backgroundColor);
+         
          this.mindElixir.changeTheme({
            name: 'EmacsTheme',
            palette: [
@@ -84,7 +87,7 @@
              "--panel-bgcolor": this.backgroundColor,
              "--panel-border-color": this.colorPalette.third,
              "--root-color": this.colorPalette.fourth,
-             "--root-bgcolor": this.colorPalette.fifth,
+             "--root-bgcolor": rootBgColor,
              "--primary-color": this.colorPalette.sixth,
              "--selection-color": this.colorPalette.seventh,
              "--line-color": this.colorPalette.eighth,
@@ -95,6 +98,9 @@
        }
      },
      createMindElixir() {
+       // 生成根节点背景色
+       const rootBgColor = this.generateRootBgColor(this.backgroundColor);
+       
        let options = {
          el: '#map',
          theme: {
@@ -120,7 +126,7 @@
              "--panel-bgcolor": this.backgroundColor,
              "--panel-border-color": this.colorPalette?.third || this.textColor,
              "--root-color": this.colorPalette?.fourth || this.textColor,
-             "--root-bgcolor": this.colorPalette?.fifth || this.backgroundColor,
+             "--root-bgcolor": rootBgColor,
              "--primary-color": this.colorPalette?.sixth || this.textColor,
              "--selection-color": this.colorPalette?.seventh || this.textColor,
              "--line-color": this.colorPalette?.eighth || this.textColor,
@@ -256,6 +262,45 @@
          } catch (error) {
            console.error('Error focusing root node:', error);
          }
+       }
+     },
+     // 添加一个辅助方法来判断颜色亮度
+     isLightColor(color) {
+       // 移除#前缀
+       const hex = color.replace('#', '');
+       
+       // 将颜色转换为RGB
+       const r = parseInt(hex.substr(0, 2), 16);
+       const g = parseInt(hex.substr(2, 2), 16);
+       const b = parseInt(hex.substr(4, 2), 16);
+       
+       // 计算亮度 (基于人眼对不同颜色的感知)
+       const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+       
+       // 亮度大于128认为是浅色
+       return brightness > 128;
+     },
+     // 根据背景色生成根节点背景色
+     generateRootBgColor(bgColor) {
+       const hex = bgColor.replace('#', '');
+       const r = parseInt(hex.substr(0, 2), 16);
+       const g = parseInt(hex.substr(2, 2), 16);
+       const b = parseInt(hex.substr(4, 2), 16);
+       
+       // 如果是浅色背景，稍微加深
+       if (this.isLightColor(bgColor)) {
+         const darkenFactor = 0.9; // 减少10%亮度
+         const newR = Math.floor(r * darkenFactor);
+         const newG = Math.floor(g * darkenFactor);
+         const newB = Math.floor(b * darkenFactor);
+         return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+       } else {
+         // 如果是深色背景，稍微变亮
+         const lightenFactor = 1.3; // 增加30%亮度，但不超过255
+         const newR = Math.min(255, Math.floor(r * lightenFactor));
+         const newG = Math.min(255, Math.floor(g * lightenFactor));
+         const newB = Math.min(255, Math.floor(b * lightenFactor));
+         return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
        }
      }
    },

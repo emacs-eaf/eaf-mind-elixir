@@ -133,7 +133,6 @@
        
        // 添加事件监听器，在节点被选中时更新currentNode
        this.mindElixir.bus.addListener('selectNode', (node) => {
-         console.log('Node selected:', node);
          this.selectedNode = node;
        });
      },
@@ -232,6 +231,32 @@
        }
        
        return JSON.stringify(result);
+     },
+     focusRootNode() {
+       if (this.mindElixir) {
+         try {
+           // 尝试获取根节点ID
+           const rootId = this.mindElixir.nodeData.id;
+           
+           // 使用selectNode方法选中根节点
+           this.mindElixir.selectNode(rootId);
+           
+           // 或者尝试使用DOM方法
+           const rootElement = document.querySelector('.root');
+           if (rootElement) {
+             rootElement.click();
+             
+             // 如果需要编辑，可以在选中后调用editTopic
+             setTimeout(() => {
+               if (this.mindElixir.currentNode) {
+                 this.mindElixir.editTopic(this.mindElixir.currentNode);
+               }
+             }, 100);
+           }
+         } catch (error) {
+           console.error('Error focusing root node:', error);
+         }
+       }
      }
    },
    created() {
@@ -254,6 +279,7 @@
      window.setNodeTopic = this.setNodeTopic;
      window.getNodeTopic = this.getNodeTopic;
      window.debugNodeInfo = this.debugNodeInfo;
+     window.focusRootNode = this.focusRootNode;
    }
  }
 </script>

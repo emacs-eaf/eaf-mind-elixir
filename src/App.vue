@@ -4,21 +4,43 @@
 
 <script>
  import MindElixir from 'mind-elixir'
+ import { QWebChannel } from "qwebchannel"
 
  export default {
    name: 'App',
    components: {
+   },
+   methods: {
+     editCurrentTopic() {
+       // 获取当前选中的节点
+       const selectedNode = this.mindElixir.currentNode
+       
+       // 如果有选中的节点，则进入编辑模式
+       if (selectedNode) {
+         this.mindElixir.editTopic(selectedNode)
+       }
+     }
+   },
+   created() {
+     // eslint-disable-next-line no-undef
+     new QWebChannel(qt.webChannelTransport, channel => {
+       window.pyobject = channel.objects.pyobject;
+     });
    },
    mounted() {
      let options = {
        el: '#map', // or HTMLDivElement
      }
 
-     let mind = new MindElixir(options)
+     // 保存mind实例到this，这样其他方法可以访问
+     this.mindElixir = new MindElixir(options)
 
      // create new map data
      const data = MindElixir.new('new topic')
-     mind.init(data)
+     this.mindElixir.init(data)
+
+     // 将editCurrentTopic方法暴露给全局，供Python调用
+     window.editCurrentTopic = this.editCurrentTopic
    }
  }
 </script>

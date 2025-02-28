@@ -124,6 +124,12 @@
          // 直接重置到1.0
          this.mindElixir.scale(1);
        }
+     },
+     setNodeTopic(text) {
+       if (this.mindElixir && this.mindElixir.currentNode) {
+         // 使用setNodeTopic API设置当前选中节点的标题
+         this.mindElixir.setNodeTopic(this.mindElixir.currentNode, text);
+       }
      }
    },
    created() {
@@ -143,6 +149,7 @@
      window.zoomIn = this.zoomIn;
      window.zoomOut = this.zoomOut;
      window.zoomReset = this.zoomReset;
+     window.setNodeTopic = this.setNodeTopic;
    }
  }
 </script>

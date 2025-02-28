@@ -119,3 +119,18 @@ class AppBuffer(BrowserBuffer):
         if notify:
             message_to_emacs("Save file: " + file_path)
 
+    @interactive()
+    def paste_to_node_topic(self):
+        '''
+        Paste Emacs clipboard content to current node topic.
+        '''
+        # 获取Emacs剪贴板内容
+        clipboard_text = self.get_clipboard_text()
+        
+        if clipboard_text:
+            # 调用JavaScript方法设置节点标题
+            self.buffer_widget.eval_js_function("setNodeTopic", clipboard_text)
+            message_to_emacs(f"Pasted: {clipboard_text}")
+        else:
+            message_to_emacs("Clipboard is empty")
+

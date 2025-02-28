@@ -93,6 +93,7 @@
 (defcustom eaf-mind-elixir-keybinding
   '(("<f12>" . "open_devtools")
     ("M-r" . "js_edit_current_topic")
+    ("M-f" . "focus_root_node")
     )
   "The keybinding of EAF Mind Elixir."
   :type 'cons)

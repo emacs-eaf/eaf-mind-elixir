@@ -21,6 +21,9 @@
 
 from core.webengine import BrowserBuffer
 from core.utils import *
+from PyQt6.QtCore import QPointF, Qt
+from PyQt6.QtGui import QMouseEvent
+from PyQt6.QtWidgets import QApplication
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
@@ -41,3 +44,47 @@ class AppBuffer(BrowserBuffer):
     def update_theme(self):
         super().update_theme()
         self.init_vars()
+
+    @interactive()
+    def focus_root_node(self):
+        '''
+        Simulate mouse click on root node.
+        '''
+        print("*******")
+        # 获取buffer_widget的位置和大小
+        rect = self.buffer_widget.geometry()
+        
+        # 计算中心点位置
+        center_x = rect.x() + rect.width() // 2
+        center_y = rect.y() + rect.height() // 2
+        
+        # 创建点击位置
+        click_pos = QPointF(center_x, center_y)
+        
+        # 创建按下事件
+        press_event = QMouseEvent(
+            QMouseEvent.Type.MouseButtonPress,
+            click_pos,
+            Qt.MouseButton.LeftButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        
+        # 发送按下事件
+        for widget in self.get_key_event_widgets():
+            post_event(widget, press_event)
+
+        # 创建释放事件
+        release_event = QMouseEvent(
+            QMouseEvent.Type.MouseButtonRelease,
+            click_pos,
+            Qt.MouseButton.LeftButton,
+            Qt.MouseButton.LeftButton,
+            Qt.KeyboardModifier.NoModifier
+        )
+        
+        # 发送释放事件
+        for widget in self.get_key_event_widgets():
+            post_event(widget, release_event)
+
+        print("#######")

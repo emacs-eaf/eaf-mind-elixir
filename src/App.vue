@@ -173,20 +173,6 @@
            }
          },
          linkStyle: 'straight', // 连接线样式：'straight' 或 'curve'
-         // 很关键：设置不同方向的节点颜色
-         direction2Color: {
-           'right': '#E74C3C',
-           '': '#E74C3C',  // 默认颜色
-           'left': '#3498DB',
-           'up': '#9B59B6', 
-           'down': '#1ABC9C'
-         },
-         // 添加自定义主题钩子
-         customTheme: (theme) => {
-           // 传入当前主题配置，返回修改后的主题配置
-           theme.palette = rainbowScheme;
-           return theme;
-         }
        }
        
        this.mindElixir = new MindElixir(options);
@@ -392,18 +378,6 @@
          path.style.stroke = colors[colorIndex];
        });
      },
-     // 添加一个方法检查节点颜色
-     checkNodeColors() {
-       // 观察一下节点的颜色
-       console.log("检查节点颜色");
-       const nodes = document.querySelectorAll('.map-node:not(.root)');
-       nodes.forEach((node) => {
-         const topic = node.querySelector('.topic');
-         if (topic) {
-           console.log(`节点 ${node.getAttribute('data-nodeid')} 的颜色: ${getComputedStyle(topic).color}`);
-         }
-       });
-     }
    },
    created() {
      // eslint-disable-next-line no-undef

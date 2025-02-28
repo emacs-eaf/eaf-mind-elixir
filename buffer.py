@@ -83,10 +83,50 @@ class AppBuffer(BrowserBuffer):
     @interactive
     def update_theme(self):
         super().update_theme()
+        
+        # 获取Emacs的多种颜色，与init_colors中相同
+        (text_color, 
+         function_color, 
+         keyword_color, 
+         builtin_color, 
+         comment_color, 
+         string_color, 
+         negation_color,
+         variable_color,
+         type_color,
+         warning_color) = get_emacs_func_result(
+            "get-emacs-face-foregrounds",
+            ["default",
+             "font-lock-function-name-face",
+             "font-lock-keyword-face",
+             "font-lock-builtin-face",
+             "font-lock-comment-face",
+             "font-lock-string-face",
+             "font-lock-negation-char-face",
+             "font-lock-variable-name-face",
+             "font-lock-type-face",
+             "font-lock-warning-face"])
+        
+        # 获取背景色
+        background_color = self.theme_background_color
+        
+        # 传递所有颜色给JavaScript
         self.buffer_widget.eval_js_function(
             'updateTheme',
-            self.theme_background_color,
-            self.theme_foreground_color)
+            background_color,
+            text_color,
+            {
+                "main": text_color,
+                "second": function_color,
+                "third": keyword_color,
+                "fourth": builtin_color,
+                "fifth": comment_color,
+                "sixth": string_color,
+                "seventh": negation_color,
+                "eighth": variable_color,
+                "ninth": type_color,
+                "tenth": warning_color
+            })
 
     @interactive()
     def focus_root_node(self):

@@ -98,9 +98,12 @@ If called interactively, prompt for a .eme file to open or create."
 
 (defcustom eaf-mind-elixir-keybinding
   '(("<f12>" . "open_devtools")
-    ("M-r" . "js_edit_current_topic")
-    ("M-f" . "focus_root_node")
-    ("1"   . "save_file")
+    ("M-r"   . "js_edit_current_topic")
+    ("M-f"   . "py_focus_root_node")
+    ("1"     . "save_file")
+    ("C--"   . "js_zoom_out")
+    ("C-="   . "js_zoom_in")
+    ("C-0"   . "js_zoom_reset")
     )
   "The keybinding of EAF Mind Elixir."
   :type 'cons)

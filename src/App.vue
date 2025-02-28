@@ -104,6 +104,26 @@
        
        // 初始化空的思维导图
        this.mindElixir.init(data);
+     },
+     zoomIn() {
+       if (this.mindElixir) {
+         // 在当前缩放基础上放大10%
+         const currentScale = this.mindElixir.scaleVal || 1;
+         this.mindElixir.scale(currentScale * 1.1);
+       }
+     },
+     zoomOut() {
+       if (this.mindElixir) {
+         // 在当前缩放基础上缩小10%
+         const currentScale = this.mindElixir.scaleVal || 1;
+         this.mindElixir.scale(currentScale * 0.9);
+       }
+     },
+     zoomReset() {
+       if (this.mindElixir) {
+         // 直接重置到1.0
+         this.mindElixir.scale(1);
+       }
      }
    },
    created() {
@@ -120,6 +140,9 @@
      window.saveFile = this.saveFile;
      window.open_file = this.open_file;
      window.init_root_node = this.init_root_node;
+     window.zoomIn = this.zoomIn;
+     window.zoomOut = this.zoomOut;
+     window.zoomReset = this.zoomReset;
    }
  }
 </script>

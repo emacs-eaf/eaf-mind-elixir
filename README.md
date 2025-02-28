@@ -30,3 +30,8 @@ Base on [Mind Elixir](https://github.com/SSShooter/mind-elixir-core/)
 | `C-0` | js_zoom_reset |
 | `C-x C-y` | paste_to_node_topic |
 | `C-x C-w` | copy_node_topic |
+| `C-f` | eaf-send-right-key |
+| `C-b` | eaf-send-left-key |
+| `C-n` | eaf-send-down-key |
+| `C-p` | eaf-send-up-key |
+| `C-m` | eaf-send-return-key |

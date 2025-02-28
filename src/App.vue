@@ -24,6 +24,32 @@
          ninth: '#000000',
          tenth: '#000000'
        },
+       rainbowColors: {
+         light: [
+           '#E74C3C', // 红色
+           '#F39C12', // 橙色
+           '#F1C40F', // 黄色
+           '#2ECC71', // 绿色
+           '#3498DB', // 蓝色
+           '#9B59B6', // 紫色
+           '#1ABC9C', // 青绿色
+           '#D35400', // 深橙色
+           '#27AE60', // 深绿色
+           '#2980B9'  // 深蓝色
+         ],
+         dark: [
+           '#FF6B6B', // 亮红色
+           '#FFAB4C', // 亮橙色
+           '#FFD93D', // 亮黄色
+           '#6BCB77', // 亮绿色
+           '#4D96FF', // 亮蓝色
+           '#B983FF', // 亮紫色
+           '#56D1C1', // 亮青绿色
+           '#FF8C42', // 亮深橙色
+           '#59C36A', // 亮深绿色
+           '#5DA3E4'  // 亮深蓝色
+         ]
+       },
        mindElixir: null,
        selectedNode: null
      }
@@ -40,20 +66,44 @@
          this.mindElixir.editTopic(selectedNode)
        }
      },
-     initColors(backgroundColor, textColor, colorPalette) {
+     initColors(backgroundColor, textColor, colorPalette, rainbowColorsStr) {
        this.backgroundColor = backgroundColor;
        this.textColor = textColor;
        this.colorPalette = colorPalette;
+       
+       // If passed rainbow color scheme, parse and update it
+       if (rainbowColorsStr) {
+         this.rainbowColors = {
+           light: typeof rainbowColorsStr.light === 'string' ? 
+                  rainbowColorsStr.light.split('|') : 
+                  this.rainbowColors.light,
+           dark: typeof rainbowColorsStr.dark === 'string' ? 
+                 rainbowColorsStr.dark.split('|') : 
+                 this.rainbowColors.dark
+         };
+       }
        
        // 如果已经有实例，更新它的主题
        if (this.mindElixir) {
          this.updateMindElixirTheme();
        }
      },
-     updateTheme(backgroundColor, textColor, colorPalette) {
+     updateTheme(backgroundColor, textColor, colorPalette, rainbowColorsStr) {
        this.backgroundColor = backgroundColor;
        this.textColor = textColor;
        this.colorPalette = colorPalette;
+       
+       // If passed rainbow color scheme, parse and update it
+       if (rainbowColorsStr) {
+         this.rainbowColors = {
+           light: typeof rainbowColorsStr.light === 'string' ? 
+                  rainbowColorsStr.light.split('|') : 
+                  this.rainbowColors.light,
+           dark: typeof rainbowColorsStr.dark === 'string' ? 
+                 rainbowColorsStr.dark.split('|') : 
+                 this.rainbowColors.dark
+         };
+       }
        
        if (this.mindElixir) {
          this.updateMindElixirTheme();
@@ -61,23 +111,17 @@
      },
      updateMindElixirTheme() {
        if (this.mindElixir) {
-         // 生成根节点背景色
+         // Generate root node background color
          const rootBgColor = this.generateRootBgColor(this.backgroundColor);
+         
+         // Select appropriate rainbow color scheme for current theme
+         const rainbowScheme = this.isLightColor(this.backgroundColor) 
+           ? this.rainbowColors.light 
+           : this.rainbowColors.dark;
          
          this.mindElixir.changeTheme({
            name: 'EmacsTheme',
-           palette: [
-             this.colorPalette.main,
-             this.colorPalette.second,
-             this.colorPalette.third,
-             this.colorPalette.fourth,
-             this.colorPalette.fifth,
-             this.colorPalette.sixth,
-             this.colorPalette.seventh,
-             this.colorPalette.eighth,
-             this.colorPalette.ninth,
-             this.colorPalette.tenth
-           ],
+           palette: rainbowScheme, // 使用彩虹色方案替代之前的调色板
            cssVar: {
              "--main-color": this.colorPalette.main,
              "--main-bgcolor": this.backgroundColor,
@@ -95,58 +139,74 @@
              "--warning-color": this.colorPalette.tenth
            }
          }, true);
+         
+         // 应用彩虹色到连接线
+         this.applyRainbowColors(rainbowScheme);
        }
      },
      createMindElixir() {
-       // 生成根节点背景色
+       // Generate root node background color
        const rootBgColor = this.generateRootBgColor(this.backgroundColor);
+       
+       // Select appropriate rainbow color scheme for current theme
+       const rainbowScheme = this.isLightColor(this.backgroundColor) 
+         ? this.rainbowColors.light 
+         : this.rainbowColors.dark;
        
        let options = {
          el: '#map',
          direction: 2,  // 设置为2表示左右平衡模式
-         draggable: true,  // 允许拖动
-         contextMenu: true,  // 启用右键菜单
-         toolBar: true,  // 显示工具栏
-         nodeMenu: true,  // 启用节点菜单
-         keypress: true,  // 启用键盘快捷键
-         locale: 'en',  // 设置语言
+         draggable: true,
+         contextMenu: true,
+         toolBar: true,
+         nodeMenu: true,
+         keypress: true,
+         locale: 'en',
          theme: {
            name: 'EmacsTheme',
-           palette: [
-             this.colorPalette?.main || this.textColor,
-             this.colorPalette?.second || this.textColor,
-             this.colorPalette?.third || this.textColor,
-             this.colorPalette?.fourth || this.textColor,
-             this.colorPalette?.fifth || this.textColor,
-             this.colorPalette?.sixth || this.textColor,
-             this.colorPalette?.seventh || this.textColor,
-             this.colorPalette?.eighth || this.textColor,
-             this.colorPalette?.ninth || this.textColor,
-             this.colorPalette?.tenth || this.textColor
-           ],
+           palette: rainbowScheme,  // 使用彩虹色方案作为调色板
+           randomColor: false,      // 关闭随机颜色
+           background: this.backgroundColor,
            cssVar: {
-             "--main-color": this.colorPalette?.main || this.textColor,
-             "--main-bgcolor": this.backgroundColor,
-             "--color": this.textColor,
-             "--bgcolor": this.backgroundColor,
-             "--panel-color": this.colorPalette?.second || this.textColor,
-             "--panel-bgcolor": this.backgroundColor,
-             "--panel-border-color": this.colorPalette?.third || this.textColor,
              "--root-color": this.colorPalette?.fourth || this.textColor,
              "--root-bgcolor": rootBgColor,
-             "--primary-color": this.colorPalette?.sixth || this.textColor,
-             "--selection-color": this.colorPalette?.seventh || this.textColor,
-             "--line-color": this.colorPalette?.eighth || this.textColor,
-             "--hover-color": this.colorPalette?.ninth || this.textColor,
-             "--warning-color": this.colorPalette?.tenth || this.textColor
            }
+         },
+         linkStyle: 'straight', // 连接线样式：'straight' 或 'curve'
+         // 很关键：设置不同方向的节点颜色
+         direction2Color: {
+           'right': '#E74C3C',
+           '': '#E74C3C',  // 默认颜色
+           'left': '#3498DB',
+           'up': '#9B59B6', 
+           'down': '#1ABC9C'
+         },
+         // 添加自定义主题钩子
+         customTheme: (theme) => {
+           // 传入当前主题配置，返回修改后的主题配置
+           theme.palette = rainbowScheme;
+           return theme;
          }
        }
+       
        this.mindElixir = new MindElixir(options);
        
-       // 添加事件监听器，在节点被选中时更新currentNode
+       // 添加事件监听器
        this.mindElixir.bus.addListener('selectNode', (node) => {
          this.selectedNode = node;
+       });
+       
+       // 在初始化完成后设置颜色
+       this.mindElixir.bus.addListener('operation', (operation) => {
+         if (['finishInit', 'moveNode', 'addChild', 'addSibling', 'removeNode'].includes(operation.name)) {
+           // 延迟一点时间执行，确保DOM已更新
+           setTimeout(() => {
+             const currentScheme = this.isLightColor(this.backgroundColor) 
+               ? this.rainbowColors.light 
+               : this.rainbowColors.dark;
+             this.applyRainbowColors(currentScheme);
+           }, 100);
+         }
        });
      },
      saveFile() {
@@ -309,6 +369,40 @@
          const newB = Math.min(255, Math.floor(b * lightenFactor));
          return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
        }
+     },
+     // 简化 applyRainbowColors 方法，只设置连接线颜色
+     applyRainbowColors(colors) {
+       if (!this.mindElixir) return;
+       
+       // 获取所有连接线
+       const connections = document.querySelectorAll('.mind-elixir-line');
+       if (!connections.length) return;
+       
+       // 为每个连接线应用彩虹色
+       connections.forEach((connection, index) => {
+         const colorIndex = index % colors.length;
+         connection.style.stroke = colors[colorIndex];
+         connection.style.strokeWidth = '2px';
+       });
+       
+       // 处理SVG路径
+       const paths = document.querySelectorAll('.mind-elixir-line path');
+       paths.forEach((path, index) => {
+         const colorIndex = index % colors.length;
+         path.style.stroke = colors[colorIndex];
+       });
+     },
+     // 添加一个方法检查节点颜色
+     checkNodeColors() {
+       // 观察一下节点的颜色
+       console.log("检查节点颜色");
+       const nodes = document.querySelectorAll('.map-node:not(.root)');
+       nodes.forEach((node) => {
+         const topic = node.querySelector('.topic');
+         if (topic) {
+           console.log(`节点 ${node.getAttribute('data-nodeid')} 的颜色: ${getComputedStyle(topic).color}`);
+         }
+       });
      }
    },
    created() {

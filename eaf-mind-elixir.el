@@ -121,6 +121,42 @@ If called interactively, prompt for a .eme file to open or create."
 (add-to-list 'eaf-app-module-path-alist '("mind-elixir" . eaf-mind-elixir-module-path))
 (add-to-list 'eaf-app-extensions-alist '("mind-elixir" . eaf-mind-elixir-extension-list))
 
+(defcustom eaf-mind-elixir-rainbow-colors-light
+  '("#E74C3C"                           ; Red
+    "#F39C12"                           ; Orange
+    "#F1C40F"                           ; Yellow
+    "#2ECC71"                           ; Green
+    "#3498DB"                           ; Blue
+    "#9B59B6"                           ; Purple
+    "#1ABC9C"                           ; Teal
+    "#D35400"                           ; Deep Orange
+    "#27AE60"                           ; Deep Green
+    "#2980B9")                          ; Deep Blue
+  "Rainbow connection line color scheme for light themes."
+  :type '(repeat string)
+  :group 'eaf-mind-elixir)
+
+(defcustom eaf-mind-elixir-rainbow-colors-dark
+  '("#FF6B6B"                           ; Bright Red
+    "#FFAB4C"                           ; Bright Orange
+    "#FFD93D"                           ; Bright Yellow
+    "#6BCB77"                           ; Bright Green
+    "#4D96FF"                           ; Bright Blue
+    "#B983FF"                           ; Bright Purple
+    "#56D1C1"                           ; Bright Teal
+    "#FF8C42"                           ; Bright Deep Orange
+    "#59C36A"                           ; Bright Deep Green
+    "#5DA3E4")                          ; Bright Deep Blue
+  "Rainbow connection line color scheme for dark themes."
+  :type '(repeat string)
+  :group 'eaf-mind-elixir)
+
+(defun eaf-mind-elixir-get-rainbow-colors ()
+  "Get rainbow color schemes as strings separated by '|' character."
+  (let ((light-colors (mapconcat 'identity eaf-mind-elixir-rainbow-colors-light "|"))
+        (dark-colors (mapconcat 'identity eaf-mind-elixir-rainbow-colors-dark "|")))
+    (list light-colors dark-colors)))
+
 (provide 'eaf-mind-elixir)
 
 ;;; eaf-mind-elixir.el ends here

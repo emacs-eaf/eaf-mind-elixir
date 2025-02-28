@@ -36,7 +36,7 @@ class AppBuffer(BrowserBuffer):
         self.init_colors()
 
     def init_colors(self):
-        # 获取Emacs的多种颜色
+        # Get various colors from Emacs
         (text_color, 
          function_color, 
          keyword_color, 
@@ -59,10 +59,15 @@ class AppBuffer(BrowserBuffer):
              "font-lock-type-face",
              "font-lock-warning-face"])
         
-        # 获取背景色
+        # Get background color
         background_color = self.theme_background_color
         
-        # 传递所有颜色给JavaScript
+        # Get user-defined rainbow color schemes
+        rainbow_colors = get_emacs_func_result("eaf-mind-elixir-get-rainbow-colors", [])
+        rainbow_colors_light = rainbow_colors[0]  # Rainbow color string for light theme
+        rainbow_colors_dark = rainbow_colors[1]   # Rainbow color string for dark theme
+        
+        # Pass all colors to JavaScript
         self.buffer_widget.eval_js_function(
             'initColors',
             background_color,
@@ -78,13 +83,17 @@ class AppBuffer(BrowserBuffer):
                 "eighth": variable_color,
                 "ninth": type_color,
                 "tenth": warning_color
+            },
+            {
+                "light": rainbow_colors_light,
+                "dark": rainbow_colors_dark
             })
 
     @interactive
     def update_theme(self):
         super().update_theme()
         
-        # 获取Emacs的多种颜色，与init_colors中相同
+        # Get various colors from Emacs, same as in init_colors
         (text_color, 
          function_color, 
          keyword_color, 
@@ -107,10 +116,15 @@ class AppBuffer(BrowserBuffer):
              "font-lock-type-face",
              "font-lock-warning-face"])
         
-        # 获取背景色
+        # Get background color
         background_color = self.theme_background_color
         
-        # 传递所有颜色给JavaScript
+        # Get user-defined rainbow color schemes
+        rainbow_colors = get_emacs_func_result("eaf-mind-elixir-get-rainbow-colors", [])
+        rainbow_colors_light = rainbow_colors[0]  # Rainbow color string for light theme
+        rainbow_colors_dark = rainbow_colors[1]   # Rainbow color string for dark theme
+        
+        # Pass all colors to JavaScript
         self.buffer_widget.eval_js_function(
             'updateTheme',
             background_color,
@@ -126,6 +140,10 @@ class AppBuffer(BrowserBuffer):
                 "eighth": variable_color,
                 "ninth": type_color,
                 "tenth": warning_color
+            },
+            {
+                "light": rainbow_colors_light,
+                "dark": rainbow_colors_dark
             })
 
     @interactive()

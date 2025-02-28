@@ -8,6 +8,13 @@
 
  export default {
    name: 'App',
+   data() {
+     return {
+       backgroundColor: '#ffffff',
+       foregroundColor: '#000000',
+       mindElixir: null
+     }
+   },
    components: {
    },
    methods: {
@@ -20,30 +27,83 @@
          this.mindElixir.editTopic(selectedNode)
        }
      },
-     initMindElixir(backgroundColor, foregroundColor) {
+     initColors(backgroundColor, foregroundColor) {
+       this.backgroundColor = backgroundColor;
+       this.foregroundColor = foregroundColor;
+       
+       // 如果已经有实例，更新它的主题
+       if (this.mindElixir) {
+         this.updateMindElixirTheme();
+       }
+     },
+     updateTheme(backgroundColor, foregroundColor) {
+       this.backgroundColor = backgroundColor;
+       this.foregroundColor = foregroundColor;
+       
+       if (this.mindElixir) {
+         this.updateMindElixirTheme();
+       }
+     },
+     updateMindElixirTheme() {
+       if (this.mindElixir) {
+         this.mindElixir.changeTheme({
+           name: 'EmacsTheme',
+           palette: [this.foregroundColor],
+           cssVar: {
+             "--main-color": this.foregroundColor,
+             "--main-bgcolor": this.backgroundColor,
+             "--color": this.foregroundColor,
+             "--bgcolor": this.backgroundColor,
+             "--panel-color": this.foregroundColor,
+             "--panel-bgcolor": this.backgroundColor,
+             "--panel-border-color": this.foregroundColor
+           }
+         }, true);  // 第二个参数true表示立即刷新
+       }
+     },
+     createMindElixir() {
        let options = {
          el: '#map',
          theme: {
            name: 'EmacsTheme',
-           palette: [foregroundColor],  // 使用前景色作为调色板
+           palette: [this.foregroundColor],
            cssVar: {
-             "--main-color": foregroundColor,
-             "--main-bgcolor": backgroundColor,
-             "--color": foregroundColor,
-             "--bgcolor": backgroundColor,
-             "--panel-color": foregroundColor,
-             "--panel-bgcolor": backgroundColor,
-             "--panel-border-color": foregroundColor
+             "--main-color": this.foregroundColor,
+             "--main-bgcolor": this.backgroundColor,
+             "--color": this.foregroundColor,
+             "--bgcolor": this.backgroundColor,
+             "--panel-color": this.foregroundColor,
+             "--panel-bgcolor": this.backgroundColor,
+             "--panel-border-color": this.foregroundColor
            }
          }
        }
-
-       // 保存mind实例到this，这样其他方法可以访问
-       this.mindElixir = new MindElixir(options)
-
-       // create new map data
-       const data = MindElixir.new('new topic')
-       this.mindElixir.init(data)
+       this.mindElixir = new MindElixir(options);
+     },
+     saveFile() {
+       // Mind Elixir的数据保存API
+       return JSON.stringify(this.mindElixir.getData())
+     },
+     open_file(base64Data) {
+       // 解码base64数据
+       const jsonStr = atob(base64Data);
+       const data = JSON.parse(jsonStr);
+       
+       // 创建Mind Elixir实例
+       this.createMindElixir();
+       
+       // 使用数据初始化思维导图
+       this.mindElixir.init(data);
+     },
+     init_root_node() {
+       // 创建新的思维导图数据
+       const data = MindElixir.new('EAF Rocks!');
+       
+       // 创建Mind Elixir实例
+       this.createMindElixir();
+       
+       // 初始化空的思维导图
+       this.mindElixir.init(data);
      }
    },
    created() {
@@ -54,8 +114,12 @@
    },
    mounted() {
      // 将方法暴露给全局，供Python调用
-     window.initMindElixir = this.initMindElixir
-     window.editCurrentTopic = this.editCurrentTopic
+     window.initColors = this.initColors;
+     window.updateTheme = this.updateTheme;
+     window.editCurrentTopic = this.editCurrentTopic;
+     window.saveFile = this.saveFile;
+     window.open_file = this.open_file;
+     window.init_root_node = this.init_root_node;
    }
  }
 </script>

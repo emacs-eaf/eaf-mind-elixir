@@ -23,7 +23,7 @@ from core.webengine import BrowserBuffer
 from core.utils import *
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import QMouseEvent
-from PyQt6.QtWidgets import QApplication
+import os
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
@@ -32,25 +32,28 @@ class AppBuffer(BrowserBuffer):
         self.load_index_html(__file__)
 
     def init_app(self):
-        self.init_vars()
+        self.init_file()
+        self.init_colors()
 
-    def init_vars(self):
+    def init_colors(self):
         self.buffer_widget.eval_js_function(
-            'initMindElixir',
+            'initColors',
             self.theme_background_color,
             self.theme_foreground_color)
 
     @interactive
     def update_theme(self):
         super().update_theme()
-        self.init_vars()
+        self.buffer_widget.eval_js_function(
+            'updateTheme',
+            self.theme_background_color,
+            self.theme_foreground_color)
 
     @interactive()
     def focus_root_node(self):
         '''
         Simulate mouse click on root node.
         '''
-        print("*******")
         # 获取buffer_widget的位置和大小
         rect = self.buffer_widget.geometry()
         
@@ -87,4 +90,32 @@ class AppBuffer(BrowserBuffer):
         for widget in self.get_key_event_widgets():
             post_event(widget, release_event)
 
-        print("#######")
+    def init_file(self):
+        self.url = os.path.expanduser(self.url)
+
+        if os.path.exists(self.url):
+            with open(self.url, "r") as f:
+                # 读取.eme文件内容
+                data = f.read()
+                self.buffer_widget.eval_js_function("open_file", string_to_base64(data))
+        else:
+            # 如果是新文件，初始化一个空的思维导图
+            self.buffer_widget.eval_js_function("init_root_node")
+
+    @interactive(insert_or_do=True)
+    def save_file(self, notify=True):
+        '''
+        Save mind map to .eme file.
+        '''
+        file_path = self.url
+        
+        # 获取mind map数据
+        data = self.buffer_widget.execute_js("saveFile();")
+        
+        # 写入文件
+        with open(file_path, "w") as f:
+            f.write(data)
+
+        if notify:
+            message_to_emacs("Save file: " + file_path)
+

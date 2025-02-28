@@ -84,24 +84,32 @@
 
 ;;; Code:
 
+(defcustom eaf-mind-elixir-extension-list
+  '("eme")
+  "The extension list of Mind Elixir application."
+  :type 'cons)
+
 ;;;###autoload
-(defun eaf-open-mind-elixir ()
-  "Open EAF vue demo"
-  (interactive)
-  (eaf-open "eaf-mind-elixir" "mind-exlixir"))
+(defun eaf-open-mind-elixir (file)
+  "Open EAF Mind Elixir.
+If called interactively, prompt for a .eme file to open or create."
+  (interactive "F[EAF/mind-elixir] Select Mindmap file: ")
+  (eaf-open file "mind-elixir"))
 
 (defcustom eaf-mind-elixir-keybinding
   '(("<f12>" . "open_devtools")
     ("M-r" . "js_edit_current_topic")
     ("M-f" . "focus_root_node")
+    ("1"   . "save_file")
     )
   "The keybinding of EAF Mind Elixir."
   :type 'cons)
 
-(add-to-list 'eaf-app-binding-alist '("mind-exlixir" . eaf-mind-elixir-keybinding))
+(add-to-list 'eaf-app-binding-alist '("mind-elixir" . eaf-mind-elixir-keybinding))
 
 (setq eaf-mind-elixir-module-path (concat (file-name-directory load-file-name) "buffer.py"))
-(add-to-list 'eaf-app-module-path-alist '("mind-exlixir" . eaf-mind-elixir-module-path))
+(add-to-list 'eaf-app-module-path-alist '("mind-elixir" . eaf-mind-elixir-module-path))
+(add-to-list 'eaf-app-extensions-alist '("mind-elixir" . eaf-mind-elixir-extension-list))
 
 (provide 'eaf-mind-elixir)
 

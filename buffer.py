@@ -20,9 +20,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from core.webengine import BrowserBuffer
+from core.utils import *
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
         BrowserBuffer.__init__(self, buffer_id, url, arguments, False)
 
         self.load_index_html(__file__)
+
+    def init_app(self):
+        self.init_vars()
+
+    def init_vars(self):
+        self.buffer_widget.eval_js_function(
+            'initMindElixir',
+            self.theme_background_color,
+            self.theme_foreground_color)
+
+    @interactive
+    def update_theme(self):
+        super().update_theme()
+        self.init_vars()

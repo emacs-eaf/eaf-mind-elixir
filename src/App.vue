@@ -19,6 +19,31 @@
        if (selectedNode) {
          this.mindElixir.editTopic(selectedNode)
        }
+     },
+     initMindElixir(backgroundColor, foregroundColor) {
+       let options = {
+         el: '#map',
+         theme: {
+           name: 'EmacsTheme',
+           palette: [foregroundColor],  // 使用前景色作为调色板
+           cssVar: {
+             "--main-color": foregroundColor,
+             "--main-bgcolor": backgroundColor,
+             "--color": foregroundColor,
+             "--bgcolor": backgroundColor,
+             "--panel-color": foregroundColor,
+             "--panel-bgcolor": backgroundColor,
+             "--panel-border-color": foregroundColor
+           }
+         }
+       }
+
+       // 保存mind实例到this，这样其他方法可以访问
+       this.mindElixir = new MindElixir(options)
+
+       // create new map data
+       const data = MindElixir.new('new topic')
+       this.mindElixir.init(data)
      }
    },
    created() {
@@ -28,18 +53,8 @@
      });
    },
    mounted() {
-     let options = {
-       el: '#map', // or HTMLDivElement
-     }
-
-     // 保存mind实例到this，这样其他方法可以访问
-     this.mindElixir = new MindElixir(options)
-
-     // create new map data
-     const data = MindElixir.new('new topic')
-     this.mindElixir.init(data)
-
-     // 将editCurrentTopic方法暴露给全局，供Python调用
+     // 将方法暴露给全局，供Python调用
+     window.initMindElixir = this.initMindElixir
      window.editCurrentTopic = this.editCurrentTopic
    }
  }

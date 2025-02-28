@@ -103,6 +103,13 @@
        
        let options = {
          el: '#map',
+         direction: 2,  // 设置为2表示左右平衡模式
+         draggable: true,  // 允许拖动
+         contextMenu: true,  // 启用右键菜单
+         toolBar: true,  // 显示工具栏
+         nodeMenu: true,  // 启用节点菜单
+         keypress: true,  // 启用键盘快捷键
+         locale: 'en',  // 设置语言
          theme: {
            name: 'EmacsTheme',
            palette: [

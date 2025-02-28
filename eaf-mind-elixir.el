@@ -110,6 +110,7 @@ If called interactively, prompt for a .eme file to open or create."
     ("C-b"     . "eaf-send-left-key")
     ("C-n"     . "eaf-send-down-key")
     ("C-p"     . "eaf-send-up-key")
+    ("C-m"     . "eaf-send-return-key")
     )
   "The keybinding of EAF Mind Elixir."
   :type 'cons)

@@ -17,3 +17,16 @@ Base on [Mind Elixir](https://github.com/SSShooter/mind-elixir-core/)
 (require 'eaf-mind-elixir)
 ```
 
+### The keybinding of EAF Mind Elixir.
+
+| Key   | Event   |
+| :---- | :------ |
+| `<f12>` | open_devtools |
+| `M-r` | js_edit_current_topic |
+| `M-f` | focus_root_node |
+| `1` | save_file |
+| `C--` | js_zoom_out |
+| `C-=` | js_zoom_in |
+| `C-0` | js_zoom_reset |
+| `C-x C-y` | paste_to_node_topic |
+| `C-x C-w` | copy_node_topic |

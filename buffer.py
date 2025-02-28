@@ -134,3 +134,30 @@ class AppBuffer(BrowserBuffer):
         else:
             message_to_emacs("Clipboard is empty")
 
+    @interactive()
+    def copy_node_topic(self):
+        '''
+        Copy current node topic to Emacs clipboard.
+        '''
+        # 获取当前节点标题
+        node_topic = self.buffer_widget.execute_js("getNodeTopic();")
+        
+        # 添加调试信息
+        current_node = self.buffer_widget.execute_js("this.mindElixir && this.mindElixir.currentNode ? 'yes' : 'no';")
+        message_to_emacs(f"Current node exists: {current_node}")
+        
+        if node_topic:
+            # 复制到Emacs剪贴板
+            eval_in_emacs('kill-new', [node_topic])
+            message_to_emacs(f"Copied: {node_topic}")
+        else:
+            message_to_emacs("No node selected")
+
+    @interactive()
+    def debug_node_info(self):
+        '''
+        Debug node information.
+        '''
+        debug_info = self.buffer_widget.execute_js("debugNodeInfo();")
+        message_to_emacs(f"Debug info: {debug_info}")
+

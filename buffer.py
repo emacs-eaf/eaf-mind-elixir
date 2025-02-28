@@ -97,10 +97,10 @@ class AppBuffer(BrowserBuffer):
             with open(self.url, "r") as f:
                 # 读取.eme文件内容
                 data = f.read()
-                self.buffer_widget.eval_js_function("open_file", string_to_base64(data))
+                self.buffer_widget.eval_js_function("openFile", string_to_base64(data))
         else:
             # 如果是新文件，初始化一个空的思维导图
-            self.buffer_widget.eval_js_function("init_root_node")
+            self.buffer_widget.eval_js_function("initRootNode")
 
     @interactive(insert_or_do=True)
     def save_file(self, notify=True):

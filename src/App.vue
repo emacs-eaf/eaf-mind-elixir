@@ -91,7 +91,7 @@
        // Mind Elixir的数据保存API
        return JSON.stringify(this.mindElixir.getData())
      },
-     open_file(base64Data) {
+     openFile(base64Data) {
        // 解码base64数据
        const jsonStr = atob(base64Data);
        const data = JSON.parse(jsonStr);
@@ -102,7 +102,7 @@
        // 使用数据初始化思维导图
        this.mindElixir.init(data);
      },
-     init_root_node() {
+     initRootNode() {
        // 创建新的思维导图数据
        const data = MindElixir.new('EAF Rocks!');
        
@@ -196,8 +196,8 @@
      window.updateTheme = this.updateTheme;
      window.editCurrentTopic = this.editCurrentTopic;
      window.saveFile = this.saveFile;
-     window.open_file = this.open_file;
-     window.init_root_node = this.init_root_node;
+     window.openFile = this.openFile;
+     window.initRootNode = this.initRootNode;
      window.zoomIn = this.zoomIn;
      window.zoomOut = this.zoomOut;
      window.zoomReset = this.zoomReset;

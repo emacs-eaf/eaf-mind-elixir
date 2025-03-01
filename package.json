@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "core-js": "^3.16.1",
-    "qwebchannel": "^6.2.0",
     "mind-elixir": "^4.4.1",
+    "qwebchannel": "^6.2.0",
     "vue": "^2.6.14"
   },
   "devDependencies": {

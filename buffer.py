@@ -22,6 +22,7 @@
 from core.webengine import BrowserBuffer
 from core.utils import *
 import os
+from PyQt6 import QtCore
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtGui import QMouseEvent
 
@@ -37,12 +38,12 @@ class AppBuffer(BrowserBuffer):
 
     def init_colors(self):
         # Get various colors from Emacs
-        (text_color, 
-         function_color, 
-         keyword_color, 
-         builtin_color, 
-         comment_color, 
-         string_color, 
+        (text_color,
+         function_color,
+         keyword_color,
+         builtin_color,
+         comment_color,
+         string_color,
          negation_color,
          variable_color,
          type_color,
@@ -58,15 +59,15 @@ class AppBuffer(BrowserBuffer):
              "font-lock-variable-name-face",
              "font-lock-type-face",
              "font-lock-warning-face"])
-        
+
         # Get background color
         background_color = self.theme_background_color
-        
+
         # Get user-defined rainbow color schemes
         rainbow_colors = get_emacs_func_result("eaf-mind-elixir-get-rainbow-colors", [])
         rainbow_colors_light = rainbow_colors[0]  # Rainbow color string for light theme
         rainbow_colors_dark = rainbow_colors[1]   # Rainbow color string for dark theme
-        
+
         # Pass all colors to JavaScript
         self.buffer_widget.eval_js_function(
             'initColors',
@@ -92,14 +93,14 @@ class AppBuffer(BrowserBuffer):
     @interactive
     def update_theme(self):
         super().update_theme()
-        
+
         # Get various colors from Emacs, same as in init_colors
-        (text_color, 
-         function_color, 
-         keyword_color, 
-         builtin_color, 
-         comment_color, 
-         string_color, 
+        (text_color,
+         function_color,
+         keyword_color,
+         builtin_color,
+         comment_color,
+         string_color,
          negation_color,
          variable_color,
          type_color,
@@ -115,15 +116,15 @@ class AppBuffer(BrowserBuffer):
              "font-lock-variable-name-face",
              "font-lock-type-face",
              "font-lock-warning-face"])
-        
+
         # Get background color
         background_color = self.theme_background_color
-        
+
         # Get user-defined rainbow color schemes
         rainbow_colors = get_emacs_func_result("eaf-mind-elixir-get-rainbow-colors", [])
         rainbow_colors_light = rainbow_colors[0]  # Rainbow color string for light theme
         rainbow_colors_dark = rainbow_colors[1]   # Rainbow color string for dark theme
-        
+
         # Pass all colors to JavaScript
         self.buffer_widget.eval_js_function(
             'updateTheme',
@@ -153,18 +154,18 @@ class AppBuffer(BrowserBuffer):
         '''
         # 首先使用JavaScript API选中根节点
         self.buffer_widget.eval_js_function("focusRootNode")
-        
+
         # 然后模拟鼠标点击以激活键盘导航
         # 获取buffer_widget的位置和大小
         rect = self.buffer_widget.geometry()
-        
+
         # 计算中心点位置
         center_x = rect.x() + rect.width() // 2
         center_y = rect.y() + rect.height() // 2
-        
+
         # 创建点击位置
         click_pos = QPointF(center_x, center_y)
-        
+
         # 创建按下事件
         press_event = QMouseEvent(
             QMouseEvent.Type.MouseButtonPress,
@@ -173,7 +174,7 @@ class AppBuffer(BrowserBuffer):
             Qt.MouseButton.LeftButton,
             Qt.KeyboardModifier.NoModifier
         )
-        
+
         # 发送按下事件
         for widget in self.get_key_event_widgets():
             post_event(widget, press_event)
@@ -186,7 +187,7 @@ class AppBuffer(BrowserBuffer):
             Qt.MouseButton.LeftButton,
             Qt.KeyboardModifier.NoModifier
         )
-        
+
         # 发送释放事件
         for widget in self.get_key_event_widgets():
             post_event(widget, release_event)
@@ -203,22 +204,24 @@ class AppBuffer(BrowserBuffer):
             # 如果是新文件，初始化一个空的思维导图
             self.buffer_widget.eval_js_function("initRootNode")
 
+
+    @QtCore.pyqtSlot(str)
+    def _save_file(self, data):
+        if data is None:
+            message_to_emacs("Error: Could not get mind map data")
+            return
+        with open(self.url, "w") as f:
+            f.write(data)
+
     @interactive(insert_or_do=True)
-    def save_file(self, notify=True):
+    def save_file(self):
         '''
         Save mind map to .eme file.
         '''
-        file_path = self.url
-        
         # 获取mind map数据
         data = self.buffer_widget.execute_js("saveFile();")
-        
-        # 写入文件
-        with open(file_path, "w") as f:
-            f.write(data)
-
-        if notify:
-            message_to_emacs("Save file: " + file_path)
+        self._save_file(data)
+        message_to_emacs("Save file: " + self.url)
 
     @interactive()
     def paste_to_node_topic(self):
@@ -227,7 +230,7 @@ class AppBuffer(BrowserBuffer):
         '''
         # 获取Emacs剪贴板内容
         clipboard_text = self.get_clipboard_text()
-        
+
         if clipboard_text:
             # 调用JavaScript方法设置节点标题
             self.buffer_widget.eval_js_function("setNodeTopic", clipboard_text)
@@ -242,11 +245,11 @@ class AppBuffer(BrowserBuffer):
         '''
         # 获取当前节点标题
         node_topic = self.buffer_widget.execute_js("getNodeTopic();")
-        
+
         # 添加调试信息
         current_node = self.buffer_widget.execute_js("this.mindElixir && this.mindElixir.currentNode ? 'yes' : 'no';")
         message_to_emacs(f"Current node exists: {current_node}")
-        
+
         if node_topic:
             # 复制到Emacs剪贴板
             eval_in_emacs('kill-new', [node_topic])
@@ -261,4 +264,3 @@ class AppBuffer(BrowserBuffer):
         '''
         debug_info = self.buffer_widget.execute_js("debugNodeInfo();")
         message_to_emacs(f"Debug info: {debug_info}")
-

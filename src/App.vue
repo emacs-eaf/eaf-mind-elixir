@@ -60,7 +60,7 @@
      editCurrentTopic() {
        // 获取当前选中的节点
        const selectedNode = this.mindElixir.currentNode
-       
+
        // 如果有选中的节点，则进入编辑模式
        if (selectedNode) {
          this.mindElixir.editTopic(selectedNode)
@@ -70,19 +70,19 @@
        this.backgroundColor = backgroundColor;
        this.textColor = textColor;
        this.colorPalette = colorPalette;
-       
+
        // If passed rainbow color scheme, parse and update it
        if (rainbowColorsStr) {
          this.rainbowColors = {
-           light: typeof rainbowColorsStr.light === 'string' ? 
-                  rainbowColorsStr.light.split('|') : 
+           light: typeof rainbowColorsStr.light === 'string' ?
+                  rainbowColorsStr.light.split('|') :
                   this.rainbowColors.light,
-           dark: typeof rainbowColorsStr.dark === 'string' ? 
-                 rainbowColorsStr.dark.split('|') : 
+           dark: typeof rainbowColorsStr.dark === 'string' ?
+                 rainbowColorsStr.dark.split('|') :
                  this.rainbowColors.dark
          };
        }
-       
+
        // 如果已经有实例，更新它的主题
        if (this.mindElixir) {
          this.updateMindElixirTheme();
@@ -92,19 +92,19 @@
        this.backgroundColor = backgroundColor;
        this.textColor = textColor;
        this.colorPalette = colorPalette;
-       
+
        // If passed rainbow color scheme, parse and update it
        if (rainbowColorsStr) {
          this.rainbowColors = {
-           light: typeof rainbowColorsStr.light === 'string' ? 
-                  rainbowColorsStr.light.split('|') : 
+           light: typeof rainbowColorsStr.light === 'string' ?
+                  rainbowColorsStr.light.split('|') :
                   this.rainbowColors.light,
-           dark: typeof rainbowColorsStr.dark === 'string' ? 
-                 rainbowColorsStr.dark.split('|') : 
+           dark: typeof rainbowColorsStr.dark === 'string' ?
+                 rainbowColorsStr.dark.split('|') :
                  this.rainbowColors.dark
          };
        }
-       
+
        if (this.mindElixir) {
          this.updateMindElixirTheme();
        }
@@ -113,12 +113,12 @@
        if (this.mindElixir) {
          // Generate root node background color
          const rootBgColor = this.generateRootBgColor(this.backgroundColor);
-         
+
          // Select appropriate rainbow color scheme for current theme
-         const rainbowScheme = this.isLightColor(this.backgroundColor) 
-           ? this.rainbowColors.light 
+         const rainbowScheme = this.isLightColor(this.backgroundColor)
+           ? this.rainbowColors.light
            : this.rainbowColors.dark;
-         
+
          this.mindElixir.changeTheme({
            name: 'EmacsTheme',
            palette: rainbowScheme, // 使用彩虹色方案替代之前的调色板
@@ -139,20 +139,27 @@
              "--warning-color": this.colorPalette.tenth
            }
          }, true);
-         
+
          // 应用彩虹色到连接线
          this.applyRainbowColors(rainbowScheme);
        }
      },
+     saveFile() {
+       if (!this.mindElixir) {
+         console.log("mindElixir is null!");
+         return null;
+       }
+       return JSON.stringify(this.mindElixir.getData());
+     },
      createMindElixir() {
        // Generate root node background color
        const rootBgColor = this.generateRootBgColor(this.backgroundColor);
-       
+
        // Select appropriate rainbow color scheme for current theme
-       const rainbowScheme = this.isLightColor(this.backgroundColor) 
-         ? this.rainbowColors.light 
+       const rainbowScheme = this.isLightColor(this.backgroundColor)
+         ? this.rainbowColors.light
          : this.rainbowColors.dark;
-       
+
        let options = {
          el: '#map',
          direction: 2,  // 设置为2表示左右平衡模式
@@ -174,49 +181,49 @@
          },
          linkStyle: 'straight', // 连接线样式：'straight' 或 'curve'
        }
-       
+
        this.mindElixir = new MindElixir(options);
-       
+
        // 添加事件监听器
        this.mindElixir.bus.addListener('selectNode', (node) => {
          this.selectedNode = node;
        });
-       
+
        // 在初始化完成后设置颜色
        this.mindElixir.bus.addListener('operation', (operation) => {
-         if (['finishInit', 'moveNode', 'addChild', 'addSibling', 'removeNode'].includes(operation.name)) {
+         console.log('Operation detected:', operation.name);
+         // Apply rainbow colors after various operations
+         if (['finishInit', 'moveNode', 'addChild', 'addSibling',
+           'insertSibling', 'removeNode', 'editTopic', 'finishEdit'].includes(operation.name)) {
            // 延迟一点时间执行，确保DOM已更新
            setTimeout(() => {
-             const currentScheme = this.isLightColor(this.backgroundColor) 
-               ? this.rainbowColors.light 
+             const currentScheme = this.isLightColor(this.backgroundColor)
+               ? this.rainbowColors.light
                : this.rainbowColors.dark;
              this.applyRainbowColors(currentScheme);
+             window.pyobject._save_file(this.saveFile());
            }, 100);
          }
        });
-     },
-     saveFile() {
-       // Mind Elixir的数据保存API
-       return JSON.stringify(this.mindElixir.getData())
      },
      openFile(base64Data) {
        // 解码base64数据
        const jsonStr = atob(base64Data);
        const data = JSON.parse(jsonStr);
-       
+
        // 创建Mind Elixir实例
        this.createMindElixir();
-       
+
        // 使用数据初始化思维导图
        this.mindElixir.init(data);
      },
      initRootNode() {
        // 创建新的思维导图数据
        const data = MindElixir.new('EAF Rocks!');
-       
+
        // 创建Mind Elixir实例
        this.createMindElixir();
-       
+
        // 初始化空的思维导图
        this.mindElixir.init(data);
      },
@@ -251,12 +258,12 @@
        if (this.selectedNode) {
          return this.selectedNode.topic;
        }
-       
+
        // 尝试使用currentNode
        if (this.mindElixir && this.mindElixir.currentNode) {
          return this.mindElixir.currentNode.topic;
        }
-       
+
        // 尝试从DOM获取
        const selectedElement = document.querySelector('.selected');
        if (selectedElement) {
@@ -265,12 +272,12 @@
            return topicElement.textContent;
          }
        }
-       
+
        // 最后返回根节点
        if (this.mindElixir && this.mindElixir.nodeData) {
          return this.mindElixir.nodeData.topic;
        }
-       
+
        return null;
      },
      debugNodeInfo() {
@@ -280,15 +287,15 @@
          selectedInDOM: !!document.querySelector('.selected'),
          rootTopic: this.mindElixir ? this.mindElixir.nodeData.topic : null
        };
-       
+
        // 尝试获取选中节点的信息
        const selectedNode = document.querySelector('.selected');
        if (selectedNode) {
          result.selectedNodeId = selectedNode.getAttribute('data-nodeid');
-         result.selectedNodeText = selectedNode.querySelector('.topic') ? 
+         result.selectedNodeText = selectedNode.querySelector('.topic') ?
                                   selectedNode.querySelector('.topic').textContent : null;
        }
-       
+
        return JSON.stringify(result);
      },
      focusRootNode() {
@@ -296,15 +303,15 @@
          try {
            // 尝试获取根节点ID
            const rootId = this.mindElixir.nodeData.id;
-           
+
            // 使用selectNode方法选中根节点
            this.mindElixir.selectNode(rootId);
-           
+
            // 或者尝试使用DOM方法
            const rootElement = document.querySelector('.root');
            if (rootElement) {
              rootElement.click();
-             
+
              // 如果需要编辑，可以在选中后调用editTopic
              setTimeout(() => {
                if (this.mindElixir.currentNode) {
@@ -321,15 +328,15 @@
      isLightColor(color) {
        // 移除#前缀
        const hex = color.replace('#', '');
-       
+
        // 将颜色转换为RGB
        const r = parseInt(hex.substr(0, 2), 16);
        const g = parseInt(hex.substr(2, 2), 16);
        const b = parseInt(hex.substr(4, 2), 16);
-       
+
        // 计算亮度 (基于人眼对不同颜色的感知)
        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-       
+
        // 亮度大于128认为是浅色
        return brightness > 128;
      },
@@ -339,7 +346,7 @@
        const r = parseInt(hex.substr(0, 2), 16);
        const g = parseInt(hex.substr(2, 2), 16);
        const b = parseInt(hex.substr(4, 2), 16);
-       
+
        // 如果是浅色背景，稍微加深
        if (this.isLightColor(bgColor)) {
          const darkenFactor = 0.9; // 减少10%亮度
@@ -359,18 +366,18 @@
      // 简化 applyRainbowColors 方法，只设置连接线颜色
      applyRainbowColors(colors) {
        if (!this.mindElixir) return;
-       
+
        // 获取所有连接线
        const connections = document.querySelectorAll('.mind-elixir-line');
        if (!connections.length) return;
-       
+
        // 为每个连接线应用彩虹色
        connections.forEach((connection, index) => {
          const colorIndex = index % colors.length;
          connection.style.stroke = colors[colorIndex];
          connection.style.strokeWidth = '2px';
        });
-       
+
        // 处理SVG路径
        const paths = document.querySelectorAll('.mind-elixir-line path');
        paths.forEach((path, index) => {
@@ -383,6 +390,7 @@
      // eslint-disable-next-line no-undef
      new QWebChannel(qt.webChannelTransport, channel => {
        window.pyobject = channel.objects.pyobject;
+       this.pyobject = window.pyobject;
      });
    },
    mounted() {

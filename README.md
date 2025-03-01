@@ -24,7 +24,7 @@ Base on [Mind Elixir](https://github.com/SSShooter/mind-elixir-core/)
 | `<f12>` | open_devtools |
 | `M-r` | js_edit_current_topic |
 | `M-f` | focus_root_node |
-| `1` | save_file |
+| `C-c C-s` | save_file |
 | `C--` | js_zoom_out |
 | `C-=` | js_zoom_in |
 | `C-0` | js_zoom_reset |

@@ -92,15 +92,21 @@
 ;;;###autoload
 (defun eaf-open-mind-elixir (file)
   "Open EAF Mind Elixir.
-If called interactively, prompt for a .eme file to open or create."
-  (interactive "F[EAF/mind-elixir] Select Mindmap file: ")
+If called interactively, prompt for a .eme file to open or create.
+If a directory is selected, prompt again to create a new file in that directory."
+  (interactive "F[EAF/mind-elixir] Select Mindmap file or directory: ")
+  (when (file-directory-p file)
+    (setq file (read-string (format "[EAF/mind-elixir] Create new mindmap file in %s: " file))))
+  (setq file (if (string-suffix-p ".eme" file)
+                 file
+               (concat file ".eme")))
   (eaf-open file "mind-elixir"))
 
 (defcustom eaf-mind-elixir-keybinding
   '(("<f12>" . "open_devtools")
     ("M-r"   . "js_edit_current_topic")
     ("M-f"   . "focus_root_node")
-    ("1"     . "save_file")
+    ("C-c C-s" . "save_file")
     ("C--"   . "js_zoom_out")
     ("C-="   . "js_zoom_in")
     ("C-0"   . "js_zoom_reset")
